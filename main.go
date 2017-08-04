@@ -26,19 +26,29 @@ func dateHandler(w http.ResponseWriter, r *http.Request){
 	timeLayout := "2006年01月02日15:04:05"
 	theTime,_ := time.ParseInLocation(timeLayout,date,time.UTC)
 	cd := CurrentDate{}
-	cd.Date = fmt.Sprintf("%d年%d月%d日",theTime.Year(),theTime.Month(),theTime.Day())
-	cd.Time = fmt.Sprintf("%d:%d",theTime.Hour(),theTime.Minute())
-	if theTime.Second() < 10{
-		cd.Second = fmt.Sprintf("0%d",theTime.Second())
-	}else {
-		cd.Second = fmt.Sprintf("%d",theTime.Second())
-	}
+	cd.Date = fmt.Sprintf("%d年%s月%s日",theTime.Year(),getMonth(theTime.Month()),getStr(theTime.Day()))
+	cd.Time = fmt.Sprintf("%s:%s",getStr(theTime.Hour()),getStr(theTime.Minute()))
+	cd.Second = getStr(theTime.Second())
 	cd.Week = getWeekDay(theTime.Weekday())
 	fmt.Println(theTime)
 	fmt.Println(cd)
 
 	t,_ := template.ParseFiles("date.tmpl")
 	t.Execute(w,cd)
+}
+
+func getStr(day int) string{
+	if day < 10{
+		return fmt.Sprintf("0%d",day)
+	}
+	return fmt.Sprintf("%d",day)
+}
+
+func getMonth(month time.Month) string{
+	if month < 10{
+		return fmt.Sprintf("0%d",month)
+	}
+	return fmt.Sprintf("%d",month)
 }
 
 func getWeekDay(week time.Weekday) string{
