@@ -28,7 +28,11 @@ func dateHandler(w http.ResponseWriter, r *http.Request){
 	cd := CurrentDate{}
 	cd.Date = fmt.Sprintf("%d年%d月%d日",theTime.Year(),theTime.Month(),theTime.Day())
 	cd.Time = fmt.Sprintf("%d:%d",theTime.Hour(),theTime.Minute())
-	cd.Second = fmt.Sprintf("%d",theTime.Second())
+	if theTime.Second() < 10{
+		cd.Second = fmt.Sprintf("0%d",theTime.Second())
+	}else {
+		cd.Second = fmt.Sprintf("%d",theTime.Second())
+	}
 	cd.Week = getWeekDay(theTime.Weekday())
 	fmt.Println(theTime)
 	fmt.Println(cd)
